@@ -1,0 +1,79 @@
+import time
+import tkinter
+import tkinter as tk
+from tkinter import *
+import requests
+
+API_Key = 'API_KEY_HERE'
+
+emoji = ''
+Clouds = '☁ '
+Clear = '☀ '
+Rain = '🌧 '
+Snow = '🌨 '
+Thunderstorm = '⛈ '
+
+def getWeather(canvas):
+
+    city = textField.get()
+    api = "http://api.openweathermap.org/data/2.5/weather?appid="+API_Key+"&units=imperial"+"&q="+city
+
+    json_data = requests.get(api).json()
+
+    condition = json_data['weather'][0]['main']
+    temp = int(json_data['main']['temp'])
+    min_temp = int(json_data['main']['temp_min'])
+    max_temp = int(json_data['main']['temp_max'])
+    feels_like = int(json_data['main']['feels_like'])
+    wind = json_data['wind']['speed']
+    sunrise = time.strftime("%I:%M", time.gmtime(json_data['sys']['sunrise'] - 18000))
+    sunset = time.strftime("%I:%M", time.gmtime(json_data['sys']['sunset'] - 18000))
+    city = json_data['name']
+    coords_lon = int(json_data['coord']['lon'])
+    coords_lat = int(json_data['coord']['lat'])
+    countrycode = json_data['sys']['country']
+
+    if (condition == "Clouds"):
+        emoji = Clouds
+    elif (condition == "Clear"):
+        emoji = Clear
+    elif (condition == "Rain"):
+        emoji = Rain
+    elif (condition == "Snow"):
+        emoji = Snow
+    elif (condition == 'Thunderstorm'):
+        emoji = Thunderstorm
+    else:
+        emoji = '❓ '
+
+    final_info = emoji + condition + "\n" + str(temp) + "°F"
+    final_data = "\n" + "Low: " + str(min_temp) + "°F" + "\n" + "High: " + str(max_temp) + "°F" + "\n" + "Wind Chill: " + str(feels_like) + "°F" + "\n" + " Wind Speed: " + str(wind) + " mph" + "\n" + "Sunrise: " + sunrise + "am" + "\n" + "Sunset: " + sunset + "pm"
+    city_data = "\n" + "\n" + "\n" + "\n" + "\n" + "\n" + "\n" + city + ", " + str(countrycode) + "\n" + "Coordinates: " + str(coords_lat) + "," + str(coords_lon)
+    label1.config(text = final_info)
+    label2.config(text = final_data)
+    label3.config(text = city_data)
+
+
+canvas = tk.Tk()
+canvas.geometry("400x500")
+canvas.title("Weather")
+
+f = ("TimesNewRoman", 15, "bold", "underline")
+t = ("TimesNewRoman", 30, "bold")
+c = ("TimesNewRoman", 10, "bold")
+
+textField = tk.Entry(canvas, justify = "center", font = t)
+textField.pack(pady = 10)
+textField.focus()
+textField.bind('<Return>', getWeather)
+
+label1 = tk.Label(canvas, font = t)
+label1.pack()
+label2 = tk.Label(canvas, font = f)
+label2.pack()
+label3 = tk.Label(canvas, font = c)
+label3.pack()
+
+canvas.mainloop()
+
+
