@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import *
 import requests
 
-API_Key = 'a6e897b90d0fe5da5417a04e7430d2f8'
+API_Key = 'API KEY HERE'
 
 emoji = ''
 Clouds = '☁ '
